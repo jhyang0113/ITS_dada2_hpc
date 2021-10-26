@@ -1,0 +1,25 @@
+#!/bin/bash --login
+########## Define Resources Needed with SBATCH Lines ##########
+
+#SBATCH --time=160:00:00   # limit of wall clock time - how long the job will run
+#SBATCH --ntasks=1       # number of tasks - how many tasks (nodes) that you require
+#SBATCH --cpus-per-task=16  # number of CPUs (or cores) per task (same as -c)
+#SBATCH --mem=160G      # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name dada2   # you can give your job a name for easier identification
+#SBATCH --account shadeash-colej           # give a running priority for your job
+#SBATCH --mail-user=jihoonyang0113@gmail.com  # enter your email address
+#SBATCH --mail-type=BEGIN,END,FAIL  # will receive an email when job starts, ends, fails
+
+########## Command Lines to Run ##########
+
+### load necessary modules, e.g.
+module purge; module load GCC/8.3.0 OpenMPI/3.1.4 R/4.0.2 UDUNITS/2.2.26
+module load R
+
+### change to the directory where your code is located
+cd /mnt/research/germs/jihoon/dada2
+
+### call your executable
+Rscript dada2_ITS_hpcc.R
+
+scontrol show job $SLURM_JOB_ID     ### write job information to output file
