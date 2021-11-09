@@ -1,13 +1,13 @@
 library(dada2)
 
-path <- "/mnt/research/germs/jihoon/dada2"
+path <- "/mnt/scratch/f0008425/ITS"
 
 set.seed(1390)
 CORES = parallel::detectCores()
 
 # Forward and reverse fastq filenames have the format:
-fnFs <- sort(list.files(path, pattern = "_R1_001.fastq.gz", full.names = TRUE))
-fnRs <- sort(list.files(path, pattern = "_R2_001.fastq.gz", full.names = TRUE))
+fnFs <- sort(list.files(path, pattern = "_R1.fastq", full.names = TRUE))
+fnRs <- sort(list.files(path, pattern = "_R2.fastq", full.names = TRUE))
 
 # Extract sample names, assuming filenames have format:
 get.sample.name <- function(fname) strsplit(basename(fname), "_")[[1]][1]
@@ -20,10 +20,10 @@ filtRs <- file.path(path, "filtered", basename(fnRs))
 out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, maxN = 0, maxEE = c(2, 2), truncQ = 2, minLen = 50, rm.phix = TRUE, compress = TRUE, multithread = CORES)
 
 # If the number of sequence files were different after filtering
-path_edited <- "/mnt/research/germs/jihoon/dada2/filtered"
+path_edited <- "/mnt/scratch/f0008425/ITS/filtered"
 
-fnFs_edited <- sort(list.files(path_edited, pattern = "_R1_001.fastq.gz", full.names = TRUE))
-fnRs_edited <- sort(list.files(path_edited, pattern = "_R2_001.fastq.gz", full.names = TRUE))
+fnFs_edited <- sort(list.files(path_edited, pattern = "_R1.fastq", full.names = TRUE))
+fnRs_edited <- sort(list.files(path_edited, pattern = "_R2.fastq", full.names = TRUE))
 errF <- learnErrors(fnFs_edited, multithread = CORES)
 errR <- learnErrors(fnRs_edited, multithread = CORES)
 
@@ -50,13 +50,8 @@ seqtab <- makeSequenceTable(mergers)
 seqtab.nochim <- removeBimeraDenovo(seqtab, method="consensus", multithread=CORES, verbose=TRUE)
 
 # Assign taxanomy
-unite.ref <- "/mnt/research/germs/jihoon/dada2/sh_general_release_dynamic_10.05.2021.fasta"
+unite.ref <- "/mnt/scratch/f0008425/ITS/sh_general_release_dynamic_10.05.2021.fasta"
 taxa <- assignTaxonomy(seqtab.nochim, unite.ref, multithread = CORES, tryRC = TRUE)
 
 saveRDS(t(seqtab.nochim), paste0(path_edited, "/seq_table.RDS"))
 saveRDS(taxa, paste0(path_edited, "/tax_table.RDS"))
-
-
-
-
-

@@ -17,7 +17,7 @@ module purge; module load GCC/8.3.0 OpenMPI/3.1.4 R/4.0.2 UDUNITS/2.2.26
 module load R
 
 ### change to the directory where your code is located
-cd /mnt/research/germs/jihoon/dada2
+cd /mnt/scratch/f0008425/ITS
 
 ### call your executable
 Rscript dada2_ITS_hpcc.R
